@@ -1,0 +1,26 @@
+export type Client = {
+  firstname: string;
+  clientUid: number;
+  lastname: string;
+  email: string;
+  clientId: string;
+  sellerId: number;
+  seller: boolean;
+  createdAt: number;
+  lastUpdated: number;
+  active: boolean;
+  standalone: boolean;
+  street: string;
+  streetNum: string;
+  city: string;
+  state: string;
+  province: string;
+  zipCode: string;
+  country: string;
+  phone: string;
+  timeZone: number;
+  sellerPermissionsId: number;
+  sellerPermissionsName: string;
+  officeId: number;
+  roles: string[];
+};
