@@ -5,7 +5,6 @@ import ResponseData from "./components/ResponseData";
 import ServiceRoutes from "./components/ServiceRoutes";
 
 function App() {
-  // const [result, setResult] = useState();
   const [result, setResult] = useState<{ [key: string]: any }[]>([]);
 
   const responseResultHandler = (data: any) => {

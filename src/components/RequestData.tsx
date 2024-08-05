@@ -117,10 +117,10 @@ const RequestData = ({ onResponseResult }: Props) => {
   return (
     <div className="card shadow bg-light p-4">
       <div className="d-flex flex-row justify-content-between">
-        <h4 className="text-dark">Payload Data</h4>
+        <h4 className="text-dark roboto-regular">Payload Data</h4>
         <button
           type="button"
-          className="btn btn-success btn-sm float-end w-25 fs-5"
+          className="btn btn-success btn-sm float-end w-25 fs-5 roboto-bold"
           onClick={saveFieldData}
         >
           Add Field
@@ -134,14 +134,14 @@ const RequestData = ({ onResponseResult }: Props) => {
               <input
                 type="text"
                 ref={fieldNameRef}
-                className="form-control w-50"
+                className="form-control w-50 roboto-light"
                 placeholder="Field Name"
               />
               <input
                 type="text"
                 ref={fieldValueRef}
                 disabled={isValueFieldDisabled}
-                className="form-control w-100"
+                className="form-control w-100 roboto-light"
                 placeholder="Field Value"
               />
               <div className="w-50">
@@ -152,7 +152,7 @@ const RequestData = ({ onResponseResult }: Props) => {
                   ref={stringArrayRef}
                   onChange={checkboxHandler.bind(this, "string")}
                 />
-                <label htmlFor="" className="px-1">
+                <label htmlFor="" className="px-1 roboto-regular">
                   String Array
                 </label>
               </div>
@@ -164,7 +164,7 @@ const RequestData = ({ onResponseResult }: Props) => {
                   ref={numberArrayRef}
                   onChange={checkboxHandler.bind(this, "number")}
                 />
-                <label htmlFor="" className="px-1">
+                <label htmlFor="" className="px-1 roboto-regular">
                   Number Array
                 </label>
               </div>
@@ -191,7 +191,7 @@ const RequestData = ({ onResponseResult }: Props) => {
       <div className="d-flex gap-2">
         <button
           type="button"
-          className="btn btn-primary w-25 fs-5"
+          className="btn btn-primary w-25 fs-5 roboto-regular"
           onClick={requestSubmitHandler}
         >
           Submit Request
@@ -199,7 +199,7 @@ const RequestData = ({ onResponseResult }: Props) => {
         <button
           type="button"
           disabled={data.length === 0}
-          className="btn btn-danger w-25 fs-5"
+          className="btn btn-danger w-25 fs-5 roboto-regular"
           onClick={resetFieldsHandler}
         >
           Reset All Fields

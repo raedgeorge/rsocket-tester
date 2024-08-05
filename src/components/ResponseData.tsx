@@ -7,13 +7,13 @@ const ResponseData = ({ ...props }: Props) => {
     <div className="card shadow bg-light form-group">
       <label
         htmlFor="response"
-        className="form-label bg-success-subtle py-1 fs-4 text-center"
+        className="form-label bg-success-subtle py-1 fs-4 text-center roboto-regular"
       >
         Response From Server
       </label>
       {props.resultData?.length > 0 && (
         <>
-          <h5 className="text-primary px-5 mt-2">
+          <h5 className="text-primary px-5 mt-2 roboto-bold">
             Total Elements: {props.resultData?.length}
           </h5>
           <div className="mt-4 px-5">
@@ -21,7 +21,8 @@ const ResponseData = ({ ...props }: Props) => {
               <div key={index} className="mb-2">
                 {Object.entries(result).map(([key, value]) => (
                   <div key={key}>
-                    <strong>{key}:</strong> {value}
+                    <strong className="roboto-light">{key}:</strong>{" "}
+                    <span className="roboto-medium">{value}</span>
                   </div>
                 ))}
                 <hr />

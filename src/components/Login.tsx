@@ -30,24 +30,24 @@ const Login = () => {
       <form onSubmit={loginHandler} className="d-flex flex-column gap-3 w-25">
         <input
           type="text"
-          className="form-control"
+          className="form-control roboto-light"
           placeholder="Email"
           ref={emailRef}
           defaultValue="raed.g@thymeapp.site"
         />
         <input
           type="text"
-          className="form-control"
+          className="form-control roboto-light"
           placeholder="Password"
           ref={passwordRef}
           defaultValue="123456"
         />
-        <button className="btn btn-primary fs-5" type="submit">
+        <button className="btn btn-primary fs-5 roboto-bold" type="submit">
           Get Access Token
         </button>
       </form>
       <div className="form-group">
-        <label className="form-label fs-5" htmlFor="token">
+        <label className="form-label fs-5 roboto-regular" htmlFor="token">
           Access Token
         </label>
         <textarea
@@ -55,7 +55,7 @@ const Login = () => {
           id="token"
           cols={180}
           rows={4}
-          className="form-control"
+          className="form-control roboto-regular"
           defaultValue={token}
         ></textarea>
       </div>
