@@ -7,7 +7,7 @@ const ResponseData = ({ ...props }: Props) => {
     <div className="card shadow bg-light form-group">
       <label
         htmlFor="response"
-        className="form-label bg-success-subtle py-1 fs-4 text-center roboto-regular"
+        className="form-label bg-success-subtle m-0 py-1 fs-4 text-center roboto-regular"
       >
         Response From Server
       </label>
