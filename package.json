@@ -20,6 +20,8 @@
     "react-dom": "^18.3.1",
     "rsocket-core": "^0.0.29-alpha.0",
     "rsocket-websocket-client": "^0.0.29-alpha.0",
+    "sweetalert2": "^11.12.4",
+    "sweetalert2-react-content": "^5.0.7",
     "websocket": "^1.0.35"
   },
   "devDependencies": {

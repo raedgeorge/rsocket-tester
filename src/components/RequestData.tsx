@@ -114,6 +114,11 @@ const RequestData = ({ onResponseResult }: Props) => {
     setIsValueFieldDisabled(false);
   };
 
+  const fieldRemoveHandler = (fieldName: string) => {
+    const newList = data.filter((d) => d.name !== fieldName);
+    setData(newList);
+  };
+
   return (
     <div className="card shadow bg-light p-4">
       <div className="d-flex flex-row justify-content-between">
@@ -180,9 +185,16 @@ const RequestData = ({ onResponseResult }: Props) => {
               <span className="col-xl-4">
                 Field: <span className="text-primary">{d.name}</span>{" "}
               </span>
-              <span className="col-xl-8">
+              <span className="col-xl-7">
                 Value: <span className="text-primary">{d.value}</span>{" "}
               </span>
+              <button
+                type="button"
+                className="btn btn-link text-decoration-none text-danger col-xl-1"
+                onClick={fieldRemoveHandler.bind(this, d.name)}
+              >
+                X
+              </button>
               <hr />
             </div>
           ))}

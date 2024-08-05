@@ -12,6 +12,10 @@ import {
 } from "rsocket-core";
 import { ReactiveSocket } from "rsocket-types";
 import RSocketWebSocketClient from "rsocket-websocket-client";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const swal = withReactContent(Swal);
 
 export const useSocket = <T, R>(
   route: string,
@@ -56,7 +60,7 @@ export const useSocket = <T, R>(
     }),
       (error: Error) => {
         console.log("connection failed", error.message);
-        setTimeout(connectRSocket, 5000);
+        // setTimeout(connectRSocket, 5000);
       };
   }, [token, route]);
 
@@ -104,14 +108,19 @@ export const useSocket = <T, R>(
           onNext(value) {
             if (!isSubscribed) return;
             const decodedData = new TextDecoder().decode(value.data);
-            // const jsonData = JSON.parse(decodedData) as T;
             const jsonData = JSON.parse(decodedData);
             setDataStream((prevData) => [...prevData, jsonData]);
           },
           onError(error: Error) {
             handleTokenExpiry(error.message);
             console.log("Socket error: " + error.message);
-            setTimeout(connectRSocket, 5000);
+            // setTimeout(connectRSocket, 5000);
+            swal.fire({
+              title: "Error Occurred!",
+              text: error.message,
+              icon: "error",
+            });
+            socket.close();
           },
           onSubscribe(sub) {
             subscription = sub;
