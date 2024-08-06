@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useSocket } from "../assets/http/rsocket";
 
 interface Props {
@@ -6,16 +6,6 @@ interface Props {
 }
 
 const RequestData = ({ onResponseResult }: Props) => {
-  const fieldNameRef = useRef<HTMLInputElement>(null);
-  const fieldValueRef = useRef<HTMLInputElement>(null);
-  const stringArrayRef = useRef<HTMLInputElement>(null);
-  const numberArrayRef = useRef<HTMLInputElement>(null);
-  const [isNumberArrayDisabled, setIsNumberArrayDisabled] =
-    useState<boolean>(false);
-  const [isStringArrayDisabled, setIsStringArrayDisabled] =
-    useState<boolean>(false);
-  const [isValueFieldDisabled, setIsValueFieldDisabled] =
-    useState<boolean>(false);
   const [requestedRoute, setRequestedRoute] = useState<string>("");
   const [data, setData] = useState<{ name: string; value: string | [] }[]>([]);
   const [requestPayload, setRequestPayload] = useState<{
@@ -35,147 +25,83 @@ const RequestData = ({ onResponseResult }: Props) => {
     }
   }, [response]);
 
-  const saveFieldData = () => {
-    const fieldName = fieldNameRef.current?.value;
-    const fieldValue = fieldValueRef.current?.value;
-
-    if (
-      fieldName &&
-      (numberArrayRef.current?.checked || stringArrayRef.current?.checked)
-    ) {
-      setData((prevData) => {
-        return [...prevData, { name: fieldName, value: [] }];
-      });
-
-      fieldNameRef.current.value = "";
-      setIsValueFieldDisabled(false);
-      setIsNumberArrayDisabled(false);
-      setIsStringArrayDisabled(false);
-      numberArrayRef!.current!.checked = false;
-      stringArrayRef!.current!.checked = false;
-
-      return;
-    }
-
-    if (fieldName && fieldValue) {
-      setData((prevData) => {
-        return [...prevData, { name: fieldName, value: fieldValue }];
-      });
-
-      fieldNameRef.current.value = "";
-      fieldValueRef.current.value = "";
-    }
-  };
-
-  const requestSubmitHandler = () => {
-    if (data.length > 0) {
-      const fields = data.map((d) => d.name);
-
-      const values = data.map((d) => d.value);
-
-      const payload = fields.map((f, index) => {
-        return `${f}:` + values[index];
-      });
-
-      console.log(data);
-      console.log(payload);
-
-      const payloadObject = payload.reduce((acc, curr) => {
-        const [key, value] = curr.split(":");
-        acc[key] = value ? value : [];
-        return acc;
-      }, {} as { [key: string]: string | [] });
-
-      console.log(payloadObject);
-      setRequestPayload(payloadObject);
-    }
-
-    const route = localStorage.getItem("route");
-    setRequestedRoute(route!);
-  };
-
   const resetFieldsHandler = () => setData([]);
-
-  const checkboxHandler = (identifier: string) => {
-    if (identifier === "number" && numberArrayRef.current?.checked) {
-      setIsStringArrayDisabled(true);
-      setIsValueFieldDisabled(true);
-      return;
-    }
-
-    if (identifier === "string" && stringArrayRef.current?.checked) {
-      setIsNumberArrayDisabled(true);
-      setIsValueFieldDisabled(true);
-      return;
-    }
-
-    setIsStringArrayDisabled(false);
-    setIsNumberArrayDisabled(false);
-    setIsValueFieldDisabled(false);
-  };
 
   const fieldRemoveHandler = (fieldName: string) => {
     const newList = data.filter((d) => d.name !== fieldName);
     setData(newList);
   };
 
+  const fileReadHandler = async (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+
+    if (files && files[0]) {
+      const file = files[0];
+      const reader = new FileReader();
+      reader.readAsText(file);
+
+      reader.onload = (event) => {
+        if (event.target?.result) {
+          try {
+            const jsonData = JSON.parse(event.target.result as string);
+
+            const payloadData: [{ name: string; value: string }] = [
+              { name: "", value: "" },
+            ];
+
+            payloadData.pop();
+
+            for (const key in jsonData) {
+              payloadData.push({ name: key, value: jsonData[key] });
+            }
+
+            setData(payloadData);
+          } catch (error) {
+            console.log("Error reading file. " + error);
+          }
+        }
+      };
+
+      reader.onerror = (error) => console.log("Error reading file. " + error);
+    }
+  };
+
+  const submitDataFromFile = () => {
+    const fields = data.map((d) => d.name);
+
+    const values = data.map((d) => d.value);
+
+    const payload = fields.map((f, index) => {
+      return `${f}:` + values[index];
+    });
+
+    const payloadObject = payload.reduce((acc, curr) => {
+      const [key, value] = curr.split(":");
+      acc[key] = value ? value : [];
+      return acc;
+    }, {} as { [key: string]: string | [] });
+
+    console.log(payloadObject);
+    setRequestPayload(payloadObject);
+
+    const route = localStorage.getItem("route");
+    setRequestedRoute(route!);
+  };
+
   return (
     <div className="card shadow bg-light p-4">
       <div className="d-flex flex-row justify-content-between">
         <h4 className="text-dark roboto-regular">Payload Data</h4>
-        <button
-          type="button"
-          className="btn btn-success btn-sm float-end w-25 fs-5 roboto-bold"
-          onClick={saveFieldData}
-        >
-          Add Field
-        </button>
       </div>
       <hr />
-      <div className="row">
-        <div className="col-xl-12">
-          <form>
-            <div className="d-flex flex-row gap-3 align-items-baseline">
-              <input
-                type="text"
-                ref={fieldNameRef}
-                className="form-control w-50 roboto-light"
-                placeholder="Field Name"
-              />
-              <input
-                type="text"
-                ref={fieldValueRef}
-                disabled={isValueFieldDisabled}
-                className="form-control w-100 roboto-light"
-                placeholder="Field Value"
-              />
-              <div className="w-50">
-                <input
-                  type="checkbox"
-                  disabled={isStringArrayDisabled}
-                  className="form-check-input"
-                  ref={stringArrayRef}
-                  onChange={checkboxHandler.bind(this, "string")}
-                />
-                <label htmlFor="" className="px-1 roboto-regular">
-                  String Array
-                </label>
-              </div>
-              <div className="w-50">
-                <input
-                  type="checkbox"
-                  disabled={isNumberArrayDisabled}
-                  className="form-check-input"
-                  ref={numberArrayRef}
-                  onChange={checkboxHandler.bind(this, "number")}
-                />
-                <label htmlFor="" className="px-1 roboto-regular">
-                  Number Array
-                </label>
-              </div>
-            </div>
-          </form>
-        </div>
+      <h5 className="roboto-regular">Read Payload From File</h5>
+      <div className="d-flex flex-row justify-content-between align-items-baseline">
+        <input
+          type="file"
+          accept=".json"
+          onChange={fileReadHandler}
+          className="form-control mb-3 roboto-bold-italic w-50"
+        />
       </div>
       <hr />
       {data.length > 0 && (
@@ -204,7 +130,7 @@ const RequestData = ({ onResponseResult }: Props) => {
         <button
           type="button"
           className="btn btn-primary w-25 fs-5 roboto-regular"
-          onClick={requestSubmitHandler}
+          onClick={submitDataFromFile}
         >
           Submit Request
         </button>

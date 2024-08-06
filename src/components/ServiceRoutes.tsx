@@ -1,6 +1,17 @@
 import { useRef, useState } from "react";
 
-const servicesList = ["client", "store", "company", "inventory"];
+const servicesList = [
+  "client",
+  "seller",
+  "store",
+  "company",
+  "station",
+  "inventory",
+  "devices",
+  "employees",
+  "invoice",
+  "settings",
+];
 
 const ServiceRoutes = () => {
   const urlRef = useRef<HTMLInputElement>(null);

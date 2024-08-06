@@ -18,10 +18,10 @@ function App() {
         <Login />
         <ServiceRoutes />
         <div className="row">
-          <div className="col-xl-6">
+          <div className="col-xl-7">
             <RequestData onResponseResult={responseResultHandler} />
           </div>
-          <div className="col-xl-6">
+          <div className="col-xl-5">
             <ResponseData resultData={result} />
           </div>
         </div>
