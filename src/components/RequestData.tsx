@@ -22,6 +22,8 @@ const RequestData = ({ onResponseResult }: Props) => {
   useEffect(() => {
     if (response.length > 0) {
       onResponseResult(response);
+      setData([]);
+      setRequestedRoute("");
     }
   }, [response]);
 
@@ -67,25 +69,26 @@ const RequestData = ({ onResponseResult }: Props) => {
   };
 
   const submitDataFromFile = () => {
-    const fields = data.map((d) => d.name);
+    if (data.length > 0) {
+      const fields = data.map((d) => d.name);
 
-    const values = data.map((d) => d.value);
+      const values = data.map((d) => d.value);
 
-    const payload = fields.map((f, index) => {
-      return `${f}:` + values[index];
-    });
+      const payload = fields.map((f, index) => {
+        return `${f}:` + values[index];
+      });
 
-    const payloadObject = payload.reduce((acc, curr) => {
-      const [key, value] = curr.split(":");
-      acc[key] = value ? value : [];
-      return acc;
-    }, {} as { [key: string]: string | [] });
+      const payloadObject = payload.reduce((acc, curr) => {
+        const [key, value] = curr.split(":");
+        acc[key] = value ? value : [];
+        return acc;
+      }, {} as { [key: string]: string | [] });
 
-    console.log(payloadObject);
-    setRequestPayload(payloadObject);
-
-    const route = localStorage.getItem("route");
-    setRequestedRoute(route!);
+      console.log(payloadObject);
+      const route = localStorage.getItem("route");
+      setRequestPayload(payloadObject);
+      setRequestedRoute(route!);
+    }
   };
 
   return (
@@ -129,6 +132,7 @@ const RequestData = ({ onResponseResult }: Props) => {
       <div className="d-flex gap-2">
         <button
           type="button"
+          disabled={data.length === 0}
           className="btn btn-primary w-25 fs-5 roboto-regular"
           onClick={submitDataFromFile}
         >
