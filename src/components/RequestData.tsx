@@ -94,7 +94,7 @@ const RequestData = ({ onResponseResult }: Props) => {
         <h4 className="text-dark roboto-regular">Payload Data</h4>
       </div>
       <hr />
-      <h5 className="roboto-regular">Read Payload From File</h5>
+      <h5 className="roboto-regular">Read Payload From File (json)</h5>
       <div className="d-flex flex-row justify-content-between align-items-baseline">
         <input
           type="file"
