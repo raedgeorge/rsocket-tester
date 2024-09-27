@@ -1,46 +1,49 @@
 import { FormEvent, useRef, useState } from "react";
 import { login } from "../assets/http/http-requests";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { LoginModel } from "../models/login-model";
 
 const Login = () => {
   const [token, setToken] = useState<string>("");
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
 
-  const loginHandler = async (event: FormEvent) => {
-    event.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginModel>();
 
-    const email = emailRef.current?.value;
-    const password = passwordRef.current?.value;
+  const loginHandler: SubmitHandler<LoginModel> = async (payload) => {
+    payload.returnSecureToken = true;
 
-    if (email && password) {
-      const model = {
-        email: email,
-        password: password,
-        returnSecureToken: true,
-      };
-
-      const response = await login(model);
-      setToken(response.data.idToken);
-      localStorage.setItem("token", response.data.idToken);
-    }
+    const response = await login(payload);
+    setToken(response.data.idToken);
+    localStorage.setItem("token", response.data.idToken);
   };
 
   return (
     <div className="p-4 d-flex flex-row gap-5 card bg-light shadow border-1 mb-4">
-      <form onSubmit={loginHandler} className="d-flex flex-column gap-3 w-25">
+      <form
+        autoComplete="true"
+        onSubmit={handleSubmit(loginHandler)}
+        className="d-flex flex-column gap-3 w-25"
+      >
         <input
           type="text"
-          className="form-control roboto-light"
-          placeholder="Email"
-          ref={emailRef}
+          placeholder="username"
           defaultValue="raed.g@thymeapp.site"
+          {...register("email", { required: true })}
+          className={`form-control roboto-light shadow-none ${
+            errors.email ? "border-danger" : "undefined"
+          }`}
         />
         <input
           type="text"
-          className="form-control roboto-light"
-          placeholder="Password"
-          ref={passwordRef}
           defaultValue="123456"
+          placeholder="password"
+          {...register("password", { required: true })}
+          className={`form-control roboto-light shadow-none ${
+            errors.password ? "border-danger" : "undefined"
+          }`}
         />
         <button className="btn btn-primary fs-5 roboto-bold" type="submit">
           Get Access Token

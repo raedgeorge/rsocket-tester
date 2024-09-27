@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 
 const servicesList = [
   "client",
@@ -16,7 +16,20 @@ const servicesList = [
 const ServiceRoutes = () => {
   const urlRef = useRef<HTMLInputElement>(null);
   const serviceRef = useRef<HTMLSelectElement>(null);
+  const [baseUrl, setBaseUrl] = useState<string>("");
   const [requestUrl, setRequestUrl] = useState<string>("");
+  const [completeUrl, setCompleteUrl] = useState<string>("");
+
+  const baseUrlSetHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    const enteredValue = event.target.value;
+    if (enteredValue) {
+      setBaseUrl(enteredValue);
+      setCompleteUrl(enteredValue);
+    } else {
+      setBaseUrl("");
+      setCompleteUrl("");
+    }
+  };
 
   const routeHandler = () => {
     const url = urlRef.current?.value;
@@ -24,6 +37,7 @@ const ServiceRoutes = () => {
 
     if (url && service) {
       setRequestUrl("wss://gatewayprod.thymeapp.site/" + url);
+      setCompleteUrl(baseUrl + "/" + url);
       localStorage.setItem("route", url);
       localStorage.setItem("service", service);
     }
@@ -37,25 +51,52 @@ const ServiceRoutes = () => {
         </p>
       )}
 
+      <div className="row mb-4">
+        <div className="col-xl-4">
+          <label className="form-label text-dark fs-6 roboto-regular">
+            Base Url
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            onChange={baseUrlSetHandler}
+          />
+        </div>
+        <div className="col-xl-8">
+          <label
+            htmlFor="complete-url"
+            className="form-label text-dark fs-6 roboto-regular"
+          >
+            Complete Url
+          </label>
+          <input
+            disabled
+            type="text"
+            id="complete-url"
+            value={completeUrl}
+            className="form-control w-100"
+          />
+        </div>
+      </div>
       <div className="d-flex flex-row gap-5 align-items-end">
         <div className="form-group w-25">
           <label
             htmlFor="route"
-            className="form-label text-dark fs-5 roboto-regular"
+            className="form-label text-dark fs-6 roboto-regular"
           >
             Service Route
           </label>
           <input
             type="text"
             ref={urlRef}
-            className="form-control roboto-medium"
             placeholder="Service Route"
+            className="form-control roboto-medium"
           />
         </div>
         <div className="form-group w-25">
           <label
             htmlFor="service"
-            className="text-dark form-label fs-5  roboto-regular"
+            className="text-dark form-label fs-6 roboto-regular"
           >
             Select Service
           </label>

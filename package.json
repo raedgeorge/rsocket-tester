@@ -19,6 +19,7 @@
     "buffer": "^6.0.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-hook-form": "^7.53.0",
     "routes-tester": "file:",
     "rsocket-core": "^0.0.29-alpha.0",
     "rsocket-websocket-client": "^0.0.29-alpha.0",
