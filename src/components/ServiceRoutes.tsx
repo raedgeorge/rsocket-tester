@@ -1,4 +1,5 @@
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useContext, useRef, useState } from "react";
+import { ApplicationContext } from "../context/app-context";
 
 const servicesList = [
   "client",
@@ -13,12 +14,17 @@ const servicesList = [
   "settings",
 ];
 
+type errorTypes = "BaseUrl" | "Route" | "";
+
 const ServiceRoutes = () => {
+  const [errorType, setErrorType] = useState<errorTypes>("");
+
   const urlRef = useRef<HTMLInputElement>(null);
   const serviceRef = useRef<HTMLSelectElement>(null);
   const [baseUrl, setBaseUrl] = useState<string>("");
   const [requestUrl, setRequestUrl] = useState<string>("");
   const [completeUrl, setCompleteUrl] = useState<string>("");
+  const { addRouteToHistory } = useContext(ApplicationContext);
 
   const baseUrlSetHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const enteredValue = event.target.value;
@@ -35,8 +41,29 @@ const ServiceRoutes = () => {
     const url = urlRef.current?.value;
     const service = serviceRef.current?.value;
 
+    setErrorType("");
+
+    console.log("check 1");
+
+    if (!baseUrl) {
+      console.log("check 2");
+      setErrorType("BaseUrl");
+    } else {
+      setErrorType("");
+    }
+
+    if (!url) {
+      console.log("check 3");
+      setErrorType("Route");
+    } else {
+      setErrorType("");
+    }
+
+    console.log("check 4");
+
     if (url && service) {
       setRequestUrl("wss://gatewayprod.thymeapp.site/" + url);
+      addRouteToHistory(url);
       setCompleteUrl(baseUrl + "/" + url);
       localStorage.setItem("route", url);
       localStorage.setItem("service", service);
@@ -58,8 +85,10 @@ const ServiceRoutes = () => {
           </label>
           <input
             type="text"
-            className="form-control"
             onChange={baseUrlSetHandler}
+            className={`${
+              errorType == "BaseUrl" ? "border-danger" : ""
+            } form-control roboto-medium shadow-none`}
           />
         </div>
         <div className="col-xl-8">
@@ -90,7 +119,9 @@ const ServiceRoutes = () => {
             type="text"
             ref={urlRef}
             placeholder="Service Route"
-            className="form-control roboto-medium"
+            className={`${
+              errorType == "BaseUrl" ? "border-danger" : ""
+            } form-control roboto-medium shadow-none`}
           />
         </div>
         <div className="form-group w-25">

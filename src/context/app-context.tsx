@@ -1,6 +1,6 @@
 import { ReactNode, createContext, useState } from "react";
 
-const ApplicationContext = createContext({
+export const ApplicationContext = createContext({
   routesHistory: [""],
   addRouteToHistory: (_route: string) => {},
 });
@@ -13,7 +13,8 @@ const ApplicationContextProvider = ({ children }: Props) => {
   const [routes, setRoutes] = useState<string[]>([]);
 
   const addRouteToHistory = (route: string) => {
-    setRoutes([...routes, route]);
+    const isRouteExisted = routes.find((r) => r === route);
+    if (!isRouteExisted) setRoutes([...routes, route]);
   };
 
   const value = {
